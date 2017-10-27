@@ -4,3 +4,6 @@
 build/
 bin/Client$InputHandler.class
 bin/Client.class
+bin/midterm/ChatMain.class
+bin/midterm/Client$InputHandler.class
+bin/midterm/Client.class

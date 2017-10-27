@@ -1,7 +1,9 @@
+package midterm;
 import java.io.*;
 import java.net.*;
-import javax.swing.*;
-import javax.swing.text.DefaultCaret;
+
+import blackjack.message.MessageFactory;
+import blackjack.message.StatusMessage;
 
 public class Client {
 
@@ -12,20 +14,24 @@ public class Client {
 	public Client(String n, Socket s) {
 		try {
 			name = n;
-			BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
-			PrintWriter writer = new PrintWriter(s.getOutputStream());
-			writer.write(name + "\n");
+			ObjectOutputStream writer = new ObjectOutputStream(s.getOutputStream());
+			ObjectInputStream reader = new ObjectInputStream(s.getInputStream());
+			writer.writeObject((MessageFactory.getLoginMessage(name)));
 			writer.flush();
-			String responseString = reader.readLine();
-			if (responseString.equals("ACK")) {
+			BufferedReader responseReader = new BufferedReader(new InputStreamReader(s.getInputStream()));
+			String responseString = responseReader.readLine();
+			System.out.println(responseString);
+			System.out.println(responseString.toString());
+			if (responseString.equals("ACKNOWLEDGE")) {
 				connected = true;
 				new Thread(new InputHandler(s)).start();
-			} else if (responseString.equals("Decline")) {
-				//chatOutput.append("User already connected\n");
+				System.out.println("Connection accepted");
+			} else if (responseString.equals("DENY")) {
+				System.out.println("User already connected\n");
 				close();
 			}
 		} catch (IOException e) {
-			//chatOutput.append("Unable to connect to server\n");
+			System.out.println("Unable to connect to server\n");
 		}
 	}
 
