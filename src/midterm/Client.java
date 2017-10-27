@@ -2,8 +2,8 @@ package midterm;
 import java.io.*;
 import java.net.*;
 
+import blackjack.message.Message;
 import blackjack.message.MessageFactory;
-import blackjack.message.StatusMessage;
 
 public class Client {
 
@@ -18,19 +18,17 @@ public class Client {
 			ObjectInputStream reader = new ObjectInputStream(s.getInputStream());
 			writer.writeObject((MessageFactory.getLoginMessage(name)));
 			writer.flush();
-			BufferedReader responseReader = new BufferedReader(new InputStreamReader(s.getInputStream()));
-			String responseString = responseReader.readLine();
-			System.out.println(responseString);
-			System.out.println(responseString.toString());
-			if (responseString.equals("ACKNOWLEDGE")) {
+			Message responseMessage = (Message)reader.readObject();
+			System.out.println(responseMessage.toString());
+			if (responseMessage.equals("ACKNOWLEDGE")) {
 				connected = true;
+				System.out.println("Connection  Accepted");
 				new Thread(new InputHandler(s)).start();
-				System.out.println("Connection accepted");
-			} else if (responseString.equals("DENY")) {
+			} else if (responseMessage.equals("DENY")) {
 				System.out.println("User already connected\n");
 				close();
 			}
-		} catch (IOException e) {
+		} catch (IOException | ClassNotFoundException e) {
 			System.out.println("Unable to connect to server\n");
 		}
 	}
