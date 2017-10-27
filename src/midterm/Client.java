@@ -4,6 +4,7 @@ import java.net.*;
 
 import blackjack.message.Message;
 import blackjack.message.MessageFactory;
+import blackjack.message.StatusMessage;
 
 public class Client {
 
@@ -18,9 +19,10 @@ public class Client {
 			ObjectInputStream reader = new ObjectInputStream(s.getInputStream());
 			writer.writeObject((MessageFactory.getLoginMessage(name)));
 			writer.flush();
-			Message responseMessage = (Message)reader.readObject();
-			System.out.println(responseMessage.toString());
-			if (responseMessage.equals("ACKNOWLEDGE")) {
+			StatusMessage responseMessage = (StatusMessage)reader.readObject();
+			System.out.println(responseMessage);
+			System.out.println(responseMessage.getType());
+			if (responseMessage.equals(StatusMessage.getAck())) {
 				connected = true;
 				System.out.println("Connection  Accepted");
 				new Thread(new InputHandler(s)).start();
