@@ -2,3 +2,5 @@
 .project
 .settings/
 build/
+bin/Client$InputHandler.class
+bin/Client.class
