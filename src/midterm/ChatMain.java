@@ -17,7 +17,7 @@ public class ChatMain {
 		}
 
 		if (s.isConnected()) {
-			Client chatClient = new Client("Justin", s);
+			ClientMessageHandler chatClient = new ClientMessageHandler("Justin", s);
 		}
 
 	}
