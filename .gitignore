@@ -11,3 +11,6 @@ bin/midterm/ChatGraphics$SendInputAction.class
 bin/midterm/ChatGraphics.class
 bin/midterm/ClientMessageHandler$InputHandler.class
 bin/midterm/ClientMessageHandler.class
+bin/midterm/ChatGraphics$1.class
+bin/midterm/ChatGraphics$2.class
+*.class

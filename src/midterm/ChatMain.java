@@ -17,8 +17,8 @@ public class ChatMain {
 		}
 
 		if (s.isConnected()) {
-			new ChatGraphics(s);
-			new ClientMessageHandler("Justin", s);
+			
+			new ClientMessageHandler("Justin", s, new ChatGraphics(s));
 		}
 
 	}
