@@ -19,6 +19,7 @@ public class ChatGraphics extends JFrame {
 	private final Font GUI_FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 16);;
 	private JTextArea inputText, outputText;
 	private ObjectOutputStream output;
+	private ObjectInputStream input;
 
 	public ChatGraphics(Socket s) {
 		super("Chat Window");
@@ -26,6 +27,7 @@ public class ChatGraphics extends JFrame {
 		this.setBounds(400, 50, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		try {
 			output = new ObjectOutputStream(s.getOutputStream());
+			input = new ObjectInputStream(s.getInputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -132,13 +134,14 @@ public class ChatGraphics extends JFrame {
 				outputText.append("Start requested\n");
 				try {
 					output.writeObject(MessageFactory.getStartMessage());
+					output.flush();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 					outputText.append("Request to start failed\n");
 				}
 			}
 		});
-		
+
 		hit.addActionListener(new ActionListener() {
 
 			@Override
@@ -146,23 +149,25 @@ public class ChatGraphics extends JFrame {
 				outputText.append("Hit requested\n");
 				try {
 					output.writeObject(MessageFactory.getHitMessage());
+					output.flush();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 					outputText.append("Request to hit failed\n");
 				}
 			}
 		});
-		
+
 		stay.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				outputText.append("stay requested\n");
+				outputText.append("Stay requested\n");
 				try {
 					output.writeObject(MessageFactory.getStartMessage());
+					output.flush();
 				} catch (IOException e1) {
 					e1.printStackTrace();
-					outputText.append("Request to stay failed\n");
+					outputText.append("Request to Stay failed\n");
 				}
 			}
 		});
@@ -184,6 +189,14 @@ public class ChatGraphics extends JFrame {
 		inputText.requestFocus();
 	}
 
+	public ObjectOutputStream getGuiOutPutStream() {
+		return output;
+	}
+
+	public ObjectInputStream getGuiInPutStream() {
+		return input;
+	}
+
 	private class SendInputAction extends AbstractAction {
 
 		private static final long serialVersionUID = 1L;
@@ -194,7 +207,6 @@ public class ChatGraphics extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			outputText.append(inputText.getText() + "\n");
 			sendChatMessageToServer(inputText.getText() + "\n");
 			inputText.requestFocus();
 		}

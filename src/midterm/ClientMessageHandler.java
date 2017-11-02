@@ -3,6 +3,7 @@ package midterm;
 import java.io.*;
 import java.net.*;
 
+import blackjack.game.Card;
 import blackjack.message.*;
 import blackjack.message.Message.MessageType;
 
@@ -17,13 +18,13 @@ public class ClientMessageHandler {
 			gui = g;
 			name = n;
 			s = socket;
-			ObjectOutputStream writer = new ObjectOutputStream(s.getOutputStream());
-			ObjectInputStream reader = new ObjectInputStream(s.getInputStream());
+			ObjectOutputStream writer = gui.getGuiOutPutStream();
+			ObjectInputStream reader = gui.getGuiInPutStream();
 			writer.writeObject((MessageFactory.getLoginMessage(name)));
 			writer.flush();
 			Message responseMessage = (Message) reader.readObject();
 			if (MessageFactory.getAckMessage().getType().equals(responseMessage.getType())) {
-				gui.addChatMessage("Connection  Accepted\n");;
+				gui.addChatMessage("Connection  Accepted\n");
 				new Thread(new InputHandler(reader, writer)).start();
 			} else if (MessageFactory.getDenyMessage().getType().equals(responseMessage.getType())) {
 				gui.addChatMessage("User already connected\n");
@@ -74,17 +75,15 @@ public class ClientMessageHandler {
 		public void run() {
 			try {
 				while (!s.isClosed() && s.isConnected() && !Thread.interrupted()) {
-					output.writeObject(MessageFactory.getAckMessage());
-					output.flush();
-					gui.addChatMessage("Waiting for input\n");
 					Message newMessage = ((Message) input.readObject());
-					gui.addChatMessage("Input Read\n");
 					if (newMessage != null) {
-						gui.addChatMessage("Message Received");
-						if(newMessage.getType().equals(MessageType.CHAT)){
-							gui.addChatMessage(newMessage.getUsername() + ": " + newMessage.toString());
+						if (newMessage.getType().equals(MessageType.CHAT)) {
+							handleChatMessage((ChatMessage) newMessage);
 						}
-						
+						if (newMessage.getType().equals(MessageType.CARD)) {
+							handlecard((CardMessage) newMessage);
+						}
+
 					}
 				}
 			} catch (IOException e) {
@@ -95,5 +94,23 @@ public class ClientMessageHandler {
 				close();
 			}
 		}
+
+		private void handleChatMessage(ChatMessage newMessage) {
+			if (newMessage.getUsername() != null) {
+				gui.addChatMessage(newMessage.getUsername() + ": " + newMessage.getText());
+			} else {
+				gui.addChatMessage(name + ": " + newMessage.getText());
+			}
+		}
+	}
+
+	public void handlecard(CardMessage newMessage) {
+		if (newMessage.getUsername() != null) {
+			gui.addChatMessage(newMessage.getUsername() + ": " + newMessage.getCard().getSuite() + " "
+					+ newMessage.getCard().getSuite());
+		} else {
+			gui.addChatMessage(name + ": " + newMessage.getCard().getSuite() + " " + newMessage.getCard().getSuite());
+		}
+
 	}
 }
