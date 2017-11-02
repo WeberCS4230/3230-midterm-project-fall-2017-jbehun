@@ -7,3 +7,7 @@ bin/Client.class
 bin/midterm/ChatMain.class
 bin/midterm/Client$InputHandler.class
 bin/midterm/Client.class
+bin/midterm/ChatGraphics$SendInputAction.class
+bin/midterm/ChatGraphics.class
+bin/midterm/ClientMessageHandler$InputHandler.class
+bin/midterm/ClientMessageHandler.class

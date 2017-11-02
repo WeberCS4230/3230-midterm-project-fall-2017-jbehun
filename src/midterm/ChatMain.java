@@ -10,14 +10,15 @@ public class ChatMain {
 		Socket s = null;
 
 		try {
-			s = new Socket("ec2-54-91-0-253.compute-1.amazonaws.com", 8989);
+			//s = new Socket("ec2-54-91-0-253.compute-1.amazonaws.com", 8989);
+			s = new Socket("127.0.0.1", 8989);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		if (s.isConnected()) {
-			ClientMessageHandler chatClient = new ClientMessageHandler("Justin", s);
+			new ChatGraphics(s);
+			new ClientMessageHandler("Justin", s);
 		}
 
 	}

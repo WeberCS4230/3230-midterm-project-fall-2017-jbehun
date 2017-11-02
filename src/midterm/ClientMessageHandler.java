@@ -67,7 +67,7 @@ public class ClientMessageHandler {
 		@Override
 		public void run() {
 			try {
-				while (!s.isClosed()) {
+				while (!s.isClosed() && s.isConnected() && !Thread.interrupted()) {
 					System.out.println((Message) input.readObject());
 				}
 			} catch (IOException e) {
