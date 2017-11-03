@@ -50,6 +50,7 @@ public class ChatGraphics extends JFrame {
 		outputText.setBorder(new EmptyBorder(0, 10, 0, 0));
 		outputText.setForeground(Color.BLUE);
 		outputText.setAutoscrolls(true);
+		outputText.setLineWrap(true);
 		DefaultCaret caret = (DefaultCaret) outputText.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 

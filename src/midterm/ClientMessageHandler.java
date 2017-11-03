@@ -126,11 +126,11 @@ public class ClientMessageHandler {
 	}
 
 	public void handlecard(CardMessage cardMessage) {
-		if (cardMessage.getUsername() != null) {
-			gui.addChatMessage(cardMessage.getUsername() + ": " + cardMessage.getCard().getSuite() + " "
-					+ cardMessage.getCard().getSuite());
+		gui.addChatMessage("Card Message Received");
+		if (!cardMessage.getUsername().equals(null) && !cardMessage.equals(null)) {
+			gui.addChatMessage(cardMessage.getUsername() + ": " + cardMessage.getCard().getSuite() + " " + cardMessage.getCard().getValue());
 		} else {
-			gui.addChatMessage(name + ": " + cardMessage.getCard().getSuite() + " " + cardMessage.getCard().getSuite());
+			gui.addChatMessage(name + ": " + cardMessage.getCard().getSuite() + " " + cardMessage.getCard().getValue());
 		}
 
 	}
