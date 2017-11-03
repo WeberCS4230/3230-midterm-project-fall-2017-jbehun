@@ -3,6 +3,7 @@ package midterm;
 import java.io.*;
 import java.net.*;
 import blackjack.message.*;
+import blackjack.message.GameActionMessage.Action;
 import blackjack.message.GameStateMessage.GameAction;
 import blackjack.message.Message.MessageType;
 
@@ -24,7 +25,7 @@ public class ClientMessageHandler {
 			Message responseMessage = (Message) reader.readObject();
 			if (MessageFactory.getAckMessage().getType().equals(responseMessage.getType())) {
 				gui.addChatMessage("Connection  Accepted\n");
-				new Thread(new InputHandler(reader)).start();
+				new Thread(new InputHandler(reader, writer)).start();
 			} else if (MessageFactory.getDenyMessage().getType().equals(responseMessage.getType())) {
 				gui.addChatMessage("User already connected\n");
 				close();
@@ -62,10 +63,12 @@ public class ClientMessageHandler {
 	private class InputHandler implements Runnable {
 
 		private ObjectInputStream input;
+		private ObjectOutputStream output;
 
-		public InputHandler(ObjectInputStream inputStream) {
+		public InputHandler(ObjectInputStream inputStream, ObjectOutputStream outputStream) {
 
 			input = inputStream;
+			output = outputStream;
 		}
 
 		@Override
@@ -83,12 +86,13 @@ public class ClientMessageHandler {
 						}
 						if (newMessage.getType().equals(MessageType.CARD)) {
 							handlecard((CardMessage) newMessage);
+							output.writeObject(MessageFactory.getWinMessage(name));
 						}
 						if (newMessage.getType().equals(MessageType.GAME_STATE)) {
 							handleGameState((GameStateMessage) newMessage);
 						}
 						if(newMessage.getType().equals(MessageType.GAME_ACTION)) {
-							handleGameAction((GameActionMessage)newMessage);
+							handleGameAction((GameActionMessage)newMessage);	
 						}
 
 					}
@@ -103,7 +107,11 @@ public class ClientMessageHandler {
 		}
 
 		private void handleGameAction(GameActionMessage actionMessage) {
-			
+			if(actionMessage.getAction().equals(Action.WIN)){
+				gui.addChatMessage("You Won");
+			}else if (actionMessage.getAction().equals(Action.BUST)){
+				gui.addChatMessage("You Busted");
+			}
 			
 		}
 
@@ -127,8 +135,8 @@ public class ClientMessageHandler {
 
 	public void handlecard(CardMessage cardMessage) {
 		gui.addChatMessage("Card Message Received");
-		if (!cardMessage.getUsername().equals(null) && !cardMessage.equals(null)) {
-			gui.addChatMessage(cardMessage.getUsername() + ": " + cardMessage.getCard().getSuite() + " " + cardMessage.getCard().getValue());
+		if (cardMessage.getUsername() != null) {
+			gui.addChatMessage("Another player drew a card");
 		} else {
 			gui.addChatMessage(name + ": " + cardMessage.getCard().getSuite() + " " + cardMessage.getCard().getValue());
 		}
