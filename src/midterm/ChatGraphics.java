@@ -132,14 +132,11 @@ public class ChatGraphics extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				outputText.append("Start requested\n");
-				try {
-					output.writeObject(MessageFactory.getStartMessage());
-					output.flush();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-					outputText.append("Request to start failed\n");
-				}
-			}
+				/*
+				 * try { output.writeObject(MessageFactory.getStartMessage()); output.flush(); }
+				 * catch (IOException e1) { e1.printStackTrace();
+				 * outputText.append("Request to start failed\n"); }
+				 */ }
 		});
 
 		hit.addActionListener(new ActionListener() {
@@ -147,13 +144,11 @@ public class ChatGraphics extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				outputText.append("Hit requested\n");
-				try {
-					output.writeObject(MessageFactory.getHitMessage());
-					output.flush();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-					outputText.append("Request to hit failed\n");
-				}
+				/*
+				 * try { output.writeObject(MessageFactory.getHitMessage()); output.flush(); }
+				 * catch (IOException e1) { e1.printStackTrace();
+				 * outputText.append("Request to hit failed\n"); }
+				 */
 			}
 		});
 
@@ -162,13 +157,11 @@ public class ChatGraphics extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				outputText.append("Stay requested\n");
-				try {
-					output.writeObject(MessageFactory.getStartMessage());
-					output.flush();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-					outputText.append("Request to Stay failed\n");
-				}
+				/*
+				 * try { output.writeObject(MessageFactory.getStartMessage()); output.flush(); }
+				 * catch (IOException e1) { e1.printStackTrace();
+				 * outputText.append("Request to Stay failed\n"); }
+				 */
 			}
 		});
 		return gameControlPanel;
@@ -185,7 +178,7 @@ public class ChatGraphics extends JFrame {
 	}
 
 	public void addChatMessage(String chat) {
-		outputText.append(chat);
+		outputText.append(chat + "\n");
 		inputText.requestFocus();
 	}
 

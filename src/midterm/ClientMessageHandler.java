@@ -25,7 +25,7 @@ public class ClientMessageHandler {
 			Message responseMessage = (Message) reader.readObject();
 			if (MessageFactory.getAckMessage().getType().equals(responseMessage.getType())) {
 				gui.addChatMessage("Connection  Accepted\n");
-				new Thread(new InputHandler(reader, writer)).start();
+				new Thread(new InputHandler(reader)).start();
 			} else if (MessageFactory.getDenyMessage().getType().equals(responseMessage.getType())) {
 				gui.addChatMessage("User already connected\n");
 				close();
@@ -63,12 +63,10 @@ public class ClientMessageHandler {
 	private class InputHandler implements Runnable {
 
 		private ObjectInputStream input;
-		private ObjectOutputStream output;
 
-		public InputHandler(ObjectInputStream inputStream, ObjectOutputStream outputStream) {
+		public InputHandler(ObjectInputStream inputStream) {
 
 			input = inputStream;
-			output = outputStream;
 		}
 
 		@Override
@@ -77,6 +75,10 @@ public class ClientMessageHandler {
 				while (!s.isClosed() && s.isConnected() && !Thread.interrupted()) {
 					Message newMessage = ((Message) input.readObject());
 					if (newMessage != null) {
+						if (newMessage.getType().equals(MessageType.ACK)
+								|| newMessage.getType().equals(MessageType.ACK)) {
+							gui.addChatMessage(newMessage.getType() + "\n");
+						}
 						if (newMessage.getType().equals(MessageType.CHAT)) {
 							handleChatMessage((ChatMessage) newMessage);
 						}

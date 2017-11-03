@@ -3,22 +3,23 @@ package midterm;
 import java.io.IOException;
 import java.net.Socket;
 
+import javax.swing.JOptionPane;
+
 public class ChatMain {
 
 	public static void main(String[] args) {
 
 		Socket s = null;
-
+		String host = JOptionPane.showInputDialog("Enter the host address");
 		try {
-			// s = new Socket("ec2-54-91-0-253.compute-1.amazonaws.com", 8989);
-			s = new Socket("127.0.0.1", 8989);
+			s = new Socket(host, 8989);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		if (s.isConnected()) {
-
-			new ClientMessageHandler("Justin", s, new ChatGraphics(s));
+			String name = JOptionPane.showInputDialog("Enter a user name");
+			new ClientMessageHandler(name, s, new ChatGraphics(s));
 		}
 
 	}
