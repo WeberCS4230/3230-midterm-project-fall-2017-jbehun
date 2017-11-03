@@ -2,7 +2,6 @@ package midterm;
 
 import java.io.IOException;
 import java.net.Socket;
-
 import javax.swing.JOptionPane;
 
 public class ChatMain {
@@ -20,6 +19,7 @@ public class ChatMain {
 		if (s.isConnected()) {
 			String name = JOptionPane.showInputDialog("Enter a user name");
 			new ClientMessageHandler(name, s, new ChatGraphics(s));
+			
 		}
 
 	}

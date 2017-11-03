@@ -102,7 +102,7 @@ public class ChatGraphics extends JFrame {
 		gameControlPanel = new JPanel();
 		gameControlPanel.setLayout(new BoxLayout(gameControlPanel, BoxLayout.Y_AXIS));
 
-		JButton startGame, hit, stay;
+		JButton startGame, joinGame, hit, stay;
 		startGame = new JButton("Start Game");
 		startGame.setMinimumSize(new Dimension(1000, 100));
 		startGame.setPreferredSize(new Dimension(1000, 100));
@@ -110,6 +110,14 @@ public class ChatGraphics extends JFrame {
 		startGame.setAlignmentX(Component.CENTER_ALIGNMENT);
 		startGame.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
 		gameControlPanel.add(startGame);
+		
+		joinGame= new JButton("Join Game");
+		joinGame.setMinimumSize(new Dimension(1000, 100));
+		joinGame.setPreferredSize(new Dimension(1000, 100));
+		joinGame.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+		joinGame.setAlignmentX(Component.CENTER_ALIGNMENT);
+		joinGame.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
+		gameControlPanel.add(joinGame);
 
 		hit = new JButton("Hit");
 		hit.setMinimumSize(new Dimension(1000, 100));
@@ -132,11 +140,31 @@ public class ChatGraphics extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				outputText.append("Start requested\n");
-				/*
-				 * try { output.writeObject(MessageFactory.getStartMessage()); output.flush(); }
-				 * catch (IOException e1) { e1.printStackTrace();
-				 * outputText.append("Request to start failed\n"); }
-				 */ }
+				
+				try {
+					output.writeObject(MessageFactory.getStartMessage());
+					output.flush();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+					outputText.append("Request to start failed\n");
+				}
+			}
+		});
+		
+		joinGame.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				outputText.append("Join requested\n");
+				
+				try {
+					output.writeObject(MessageFactory.getJoinMessage());
+					output.flush();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+					outputText.append("Request to start failed\n");
+				}
+			}
 		});
 
 		hit.addActionListener(new ActionListener() {
@@ -144,11 +172,14 @@ public class ChatGraphics extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				outputText.append("Hit requested\n");
-				/*
-				 * try { output.writeObject(MessageFactory.getHitMessage()); output.flush(); }
-				 * catch (IOException e1) { e1.printStackTrace();
-				 * outputText.append("Request to hit failed\n"); }
-				 */
+
+				try {
+					output.writeObject(MessageFactory.getHitMessage());
+					output.flush();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+					outputText.append("Request to hit failed\n");
+				}
 			}
 		});
 
@@ -157,11 +188,15 @@ public class ChatGraphics extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				outputText.append("Stay requested\n");
-				/*
-				 * try { output.writeObject(MessageFactory.getStartMessage()); output.flush(); }
-				 * catch (IOException e1) { e1.printStackTrace();
-				 * outputText.append("Request to Stay failed\n"); }
-				 */
+
+				try {
+					output.writeObject(MessageFactory.getStartMessage());
+					output.flush();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+					outputText.append("Request to Stay failed\n");
+				}
+
 			}
 		});
 		return gameControlPanel;
