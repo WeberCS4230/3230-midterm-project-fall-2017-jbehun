@@ -2,9 +2,8 @@ package midterm;
 
 import java.io.*;
 import java.net.*;
-
-import blackjack.game.Card;
 import blackjack.message.*;
+import blackjack.message.GameStateMessage.GameAction;
 import blackjack.message.Message.MessageType;
 
 public class ClientMessageHandler {
@@ -85,6 +84,12 @@ public class ClientMessageHandler {
 						if (newMessage.getType().equals(MessageType.CARD)) {
 							handlecard((CardMessage) newMessage);
 						}
+						if (newMessage.getType().equals(MessageType.GAME_STATE)) {
+							handleGameState((GameStateMessage) newMessage);
+						}
+						if(newMessage.getType().equals(MessageType.GAME_ACTION)) {
+							handleGameAction((GameActionMessage)newMessage);
+						}
 
 					}
 				}
@@ -97,21 +102,35 @@ public class ClientMessageHandler {
 			}
 		}
 
-		private void handleChatMessage(ChatMessage newMessage) {
-			if (newMessage.getUsername() != null) {
-				gui.addChatMessage(newMessage.getUsername() + ": " + newMessage.getText());
+		private void handleGameAction(GameActionMessage actionMessage) {
+			
+			
+		}
+
+		private void handleGameState(GameStateMessage gameStateMessage) {
+			if (GameAction.JOIN.equals(gameStateMessage.getRequestedState())) {
+				gui.addChatMessage("To join game click join");
+			} else if (GameAction.START.equals(gameStateMessage.getRequestedState())) {
+				gui.addChatMessage("Game Started");
+			}
+
+		}
+
+		private void handleChatMessage(ChatMessage chatMessage) {
+			if (chatMessage.getUsername() != null) {
+				gui.addChatMessage(chatMessage.getUsername() + ": " + chatMessage.getText());
 			} else {
-				gui.addChatMessage(name + ": " + newMessage.getText());
+				gui.addChatMessage(name + ": " + chatMessage.getText());
 			}
 		}
 	}
 
-	public void handlecard(CardMessage newMessage) {
-		if (newMessage.getUsername() != null) {
-			gui.addChatMessage(newMessage.getUsername() + ": " + newMessage.getCard().getSuite() + " "
-					+ newMessage.getCard().getSuite());
+	public void handlecard(CardMessage cardMessage) {
+		if (cardMessage.getUsername() != null) {
+			gui.addChatMessage(cardMessage.getUsername() + ": " + cardMessage.getCard().getSuite() + " "
+					+ cardMessage.getCard().getSuite());
 		} else {
-			gui.addChatMessage(name + ": " + newMessage.getCard().getSuite() + " " + newMessage.getCard().getSuite());
+			gui.addChatMessage(name + ": " + cardMessage.getCard().getSuite() + " " + cardMessage.getCard().getSuite());
 		}
 
 	}
