@@ -103,40 +103,13 @@ public class ChatGraphics extends JFrame {
 		gameControlPanel = new JPanel();
 		gameControlPanel.setLayout(new BoxLayout(gameControlPanel, BoxLayout.Y_AXIS));
 
-		JButton startGame, joinGame, hit, stay;
-		startGame = new JButton("Start Game");
-		startGame.setMinimumSize(new Dimension(1000, 100));
-		startGame.setPreferredSize(new Dimension(1000, 100));
-		startGame.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
-		startGame.setAlignmentX(Component.CENTER_ALIGNMENT);
-		startGame.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
-		gameControlPanel.add(startGame);
+		// We can replace all of the calls doing the same thing with one method that sets them all up.
+		Font buttonFont = new Font(Font.SANS_SERIF, Font.BOLD, 20);
+		float center = Component.CENTER_ALIGNMENT;
 		
-		joinGame= new JButton("Join Game");
-		joinGame.setMinimumSize(new Dimension(1000, 100));
-		joinGame.setPreferredSize(new Dimension(1000, 100));
-		joinGame.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
-		joinGame.setAlignmentX(Component.CENTER_ALIGNMENT);
-		joinGame.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
-		gameControlPanel.add(joinGame);
-
-		hit = new JButton("Hit");
-		hit.setMinimumSize(new Dimension(1000, 100));
-		hit.setPreferredSize(new Dimension(1000, 100));
-		hit.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
-		hit.setAlignmentX(Component.CENTER_ALIGNMENT);
-		hit.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
-		gameControlPanel.add(hit);
-
-		stay = new JButton("Stay");
-		stay.setMinimumSize(new Dimension(1000, 100));
-		stay.setPreferredSize(new Dimension(1000, 100));
-		stay.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
-		stay.setAlignmentX(Component.CENTER_ALIGNMENT);
-		stay.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
-		gameControlPanel.add(stay);
-
-		startGame.addActionListener(new ActionListener() {
+		// If this is really the pattern for the listener, you could condense it down to one call which simply updates the log message
+		// and which type of message to send (get<whichever>Message as part of a switch or similar
+		setupButton("Start Game", center, buttonFont, gameControlPanel, new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -152,7 +125,7 @@ public class ChatGraphics extends JFrame {
 			}
 		});
 		
-		joinGame.addActionListener(new ActionListener() {
+		setupButton("Join Game", center, buttonFont, gameControlPanel, new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -168,7 +141,7 @@ public class ChatGraphics extends JFrame {
 			}
 		});
 
-		hit.addActionListener(new ActionListener() {
+		setupButton("Hit", center, buttonFont, gameControlPanel, new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -184,7 +157,7 @@ public class ChatGraphics extends JFrame {
 			}
 		});
 
-		stay.addActionListener(new ActionListener() {
+		setupButton("Stay", center, buttonFont, gameControlPanel, new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -200,7 +173,23 @@ public class ChatGraphics extends JFrame {
 
 			}
 		});
+
 		return gameControlPanel;
+	}
+
+	private JButton setupButton(String buttonLabel, float alignment, Font font, JPanel gameControlPanel, ActionListener listener) {
+		JButton button;
+		button = new JButton(buttonLabel);
+		button.setMinimumSize(new Dimension(1000, 100));
+		button.setPreferredSize(new Dimension(1000, 100));
+		button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+		button.setAlignmentX(alignment);
+		button.setFont(font);
+		
+		button.addActionListener(listener);
+		gameControlPanel.add(button);
+		
+		return button;
 	}
 
 	private void sendChatMessageToServer(String input) {
